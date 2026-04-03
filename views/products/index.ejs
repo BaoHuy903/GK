@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Danh sách sản phẩm</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-light bg-light mb-4 shadow-sm">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="/products">🏠 Trang Chủ</a>
+            <div class="d-flex ms-auto align-items-center">
+                <% if (currentUser) { %>
+                    <span class="me-3">Xin chào, <strong class="text-primary"><%= currentUser %></strong>!</span>
+                    <a href="/users/logout" class="btn btn-sm btn-outline-danger">Đăng xuất</a>
+                <% } else { %>
+                    <a href="/users/login" class="btn btn-sm btn-outline-primary">Đăng nhập</a>
+                <% } %>
+            </div>
+        </div>
+    </nav>
+    <div class="container mt-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>Cửa hàng quần áo</h2>
+            
+            <div class="d-flex align-items-center">
+                <form action="/products" method="GET" class="d-flex me-3">
+                    <input type="text" name="search" class="form-control me-2" placeholder="Tìm tên sản phẩm..." value="<%= typeof searchQuery !== 'undefined' ? searchQuery : '' %>">
+                    <button type="submit" class="btn btn-outline-secondary">Tìm</button>
+                </form>
+                
+                <a href="/products/new" class="btn btn-success text-nowrap">Thêm sản phẩm mới</a>
+            </div>
+        </div>
+
+        <div class="row">
+            <% products.forEach(product => { %>
+                <div class="col-md-4 mb-4">
+                    <div class="card shadow-sm h-100">
+                        <img src="<%= product.image && product.image !== 'default.jpg' ? product.image : 'https://via.placeholder.com/300x400?text=No+Image' %>" class="card-img-top" alt="<%= product.name %>" style="object-fit: cover; height: 300px;">
+                        <div class="card-body">
+                            <h5 class="card-title"><%= product.name %></h5>
+                            <p class="card-text text-danger fw-bold">$<%= product.price %>.00</p>
+                            
+                            <div class="d-flex justify-content-between">
+                                <a href="/products/<%= product._id %>" class="btn btn-sm btn-info text-white">Chi tiết</a>
+                                <a href="/products/<%= product._id %>/edit" class="btn btn-sm btn-warning">Sửa</a>
+                                <form action="/products/<%= product._id %>?_method=DELETE" method="POST" style="display:inline;">
+                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Bạn có chắc chắn muốn xóa?')">Xóa</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <% }) %>
+        </div>
+    </div>
+</body>
+</html>
